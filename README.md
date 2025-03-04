@@ -54,8 +54,8 @@ Debian 12+
 
 Clone this repository or download it:
 
-    git clone https://github.com/yourusername/ansible-role-guacamole.git
-    cd ansible-role-guacamole
+    git clone https://github.com/Kharune/ansible_guacamole_docker.git
+    cd ansible_guacamole_docker
 
 2️⃣ **Configure Inventory, Playbook, and Ansible Configuration**
 
