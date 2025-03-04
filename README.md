@@ -113,8 +113,6 @@ Customize the role variables by modifying defaults/main.yml :
 
 🔒 **SSL & HAProxy Configuration**
 
-Self-Signed Certificate Generation
-
 This role automatically generates a self-signed SSL certificate for HAProxy :
 
     Certificate Path: /etc/ssl/certs/guacamole.pem
