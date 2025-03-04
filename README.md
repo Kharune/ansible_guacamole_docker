@@ -94,7 +94,7 @@ Ensure your Ansible configuration is set correctly :
 
 Run the playbook :
 
-    ansible-playbook PB_deploy_guacamole.yml
+    ansible-playbook PB_deploy_guac_services.yml
 
 ⚙️ **Role Variables**
 
