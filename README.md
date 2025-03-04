@@ -79,10 +79,6 @@ Playbook Configuration (PB_deploy_guacamole.yml)
       hosts: preprod  # Change this based on your target group
       remote_user: control  # Change this based on your user
       become: true
-    
-      vars_files:
-        - vars/secrets.yml  # Load encrypted variables (e.g., database passwords)
-    
       roles:
         - guacamole_docker_with_https
 
