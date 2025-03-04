@@ -143,4 +143,4 @@ https://github.com/user-attachments/assets/44d221ad-393d-42fe-8988-f01f2b84b1a3
 
 
 
-🥑 **Apache interface default credential : guacadmin/guacadmin**
+🥑 **Apache Guacamole default credential : guacadmin/guacadmin**
