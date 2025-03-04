@@ -16,6 +16,10 @@
     cmd: "docker cp {{ installation_path }}/guacamole/initdb.sql guacamole_db:/initdb.sql"
   changed_when: false
 
+- name: Wait for MariaDB to be ready
+  command: sleep 5
+  changed_when: false
+
 - name: Import database schema into MySQL
   ansible.builtin.shell: >
     docker exec -i guacamole_db bash -c "mariadb -u root -p{{ MYSQL_ROOT_PASSWORD }} guacamole < /initdb.sql"
