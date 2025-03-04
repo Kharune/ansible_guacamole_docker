@@ -1,0 +1,7 @@
+---
+- name: Deploy Guacamole Service
+  hosts: preprod
+  remote_user: control
+  become: true
+  roles:
+    - guacamole_docker
