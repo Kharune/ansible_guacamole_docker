@@ -135,7 +135,12 @@ This role configures HAProxy to :
     
     Redirect HTTP to HTTPS
 
-🍏 Apache interface : guacadmin/guacadmin
+🍏 **Demo**
 
 
-![image](https://github.com/user-attachments/assets/28834d87-8877-49d6-b895-a1cdecd62662)
+
+https://github.com/user-attachments/assets/44d221ad-393d-42fe-8988-f01f2b84b1a3
+
+
+
+🍏 Apache interface default credential : guacadmin/guacadmin
