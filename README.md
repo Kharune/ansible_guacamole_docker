@@ -137,7 +137,7 @@ To use a Let's Encrypt certificate instead :
     
     Update the HAProxy configuration to point to the new certificate paths.
 
-HAProxy Configuration (haproxy.cfg)
+    File : HAProxy Configuration (haproxy.cfg.j2)
 
 This role configures HAProxy to :
 
