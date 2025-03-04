@@ -1,0 +1,56 @@
+---
+- name: Ensure Guacamole working directory exists
+  ansible.builtin.file:
+    path: "{{ installation_path }}/guacamole"
+    state: directory
+    mode: '0755'
+    recurse: yes
+    owner: "{{ ansible_user_id }}"
+
+- name: Generate Self-Signed SSL Certificates
+  ansible.builtin.include_tasks: ssl.yml  # 🔹 Include SSL Setup
+
+- name: Create `.env` file with environment variables
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ installation_path }}/guacamole/.env"
+    owner: "{{ ansible_user_id }}"
+    mode: '0600'
+
+- name: Upload Docker Compose configuration
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ installation_path }}/guacamole/docker-compose.yml"
+    owner: "{{ ansible_user_id }}"
+    mode: '0644'
+
+- name: Upload HAProxy configuration for HTTPS
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: "{{ installation_path }}/guacamole/haproxy.cfg"
+    owner: "{{ ansible_user_id }}"
+    mode: '0644'
+
+- name: Start Guacamole containers with Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ installation_path }}/guacamole"
+  register: output
+
+- name: Ensure correct permissions for MySQL data directory
+  ansible.builtin.file:
+    path: "{{ installation_path }}/guacamole/guacamole_db"
+    state: directory
+    owner: "999"
+    group: "999"
+    mode: '0755'
+    recurse: yes
+
+- name: Initialize MySQL Database for Guacamole
+  ansible.builtin.include_tasks: initdb.yml
+
+- name: Restart Guacamole container to apply changes
+  community.docker.docker_container:
+    name: guacamole
+    restart: true
+
+# tasks file for guacamole_docker

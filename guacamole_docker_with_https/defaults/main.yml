@@ -1,0 +1,9 @@
+---
+installation_path: "/opt/docker"
+MYSQL_ROOT_PASSWORD: "sha521!!"
+MYSQL_DATABASE: "guacamole"
+MYSQL_USER: "guacamole"
+MYSQL_PASSWORD: "sha521!!"
+RECORDING_SEARCH_PATH: "/var/lib/guacamole/recordings"
+
+# defaults file for guacamole_docker

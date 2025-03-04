@@ -1,0 +1,61 @@
+services:
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ./certs:/etc/haproxy/certs
+    ports:
+      - "443:443"
+    networks:
+      - guac_net
+    restart: always
+
+  guacamole_db:
+    container_name: guacamole_db
+    hostname: guacamole_db
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - ./guacamole_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
+      - MYSQL_DATABASE={{ MYSQL_DATABASE }}
+      - MYSQL_USER={{ MYSQL_USER }}
+      - MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
+    expose:
+      - 3306
+    networks:
+      - guac_net
+
+  guacd:
+    container_name: guacd
+    hostname: guacd
+    image: guacamole/guacd:latest
+    restart: always
+    expose:
+      - 4822
+    networks:
+      - guac_net
+
+  guacamole:
+    container_name: guacamole
+    hostname: guacamole
+    restart: always
+    image: guacamole/guacamole:latest
+    depends_on:
+      - guacamole_db
+      - guacd
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - MYSQL_HOSTNAME=guacamole_db
+      - MYSQL_DATABASE={{ MYSQL_DATABASE }}
+      - MYSQL_USER={{ MYSQL_USER }}
+      - MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
+    expose:
+      - 8080
+    networks:
+      - guac_net
+
+networks:
+  guac_net:

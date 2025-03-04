@@ -1,0 +1,22 @@
+---
+- name: Extract Guacamole MySQL initialization script
+  ansible.builtin.command: >
+    docker run --rm guacamole/guacamole:latest /opt/guacamole/bin/initdb.sh --mysql
+  register: initdb_output
+  changed_when: initdb_output.rc == 0
+
+- name: Save initialization script to file
+  ansible.builtin.copy:
+    dest: "{{ installation_path }}/guacamole/initdb.sql"
+    content: "{{ initdb_output.stdout }}"
+    mode: '0644'
+
+- name: Copy initialization script to database container
+  ansible.builtin.command:
+    cmd: "docker cp {{ installation_path }}/guacamole/initdb.sql guacamole_db:/initdb.sql"
+  changed_when: false
+
+- name: Import database schema into MySQL
+  ansible.builtin.shell: >
+    docker exec -i guacamole_db bash -c "mariadb -u root -p{{ MYSQL_ROOT_PASSWORD }} guacamole < /initdb.sql"
+  changed_when: true

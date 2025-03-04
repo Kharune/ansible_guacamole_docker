@@ -1,0 +1,29 @@
+---
+- name: Ensure certs directory exists
+  ansible.builtin.file:
+    path: "{{ installation_path }}/guacamole/certs"
+    state: directory
+    mode: '0755'
+    recurse: yes
+
+- name: Generate private key for SSL
+  community.crypto.openssl_privatekey:
+    path: "{{ installation_path }}/guacamole/certs/guac_ssl.key"
+    size: 2048
+
+- name: Generate self-signed certificate
+  community.crypto.x509_certificate:
+    path: "{{ installation_path }}/guacamole/certs/guac_ssl.crt"
+    privatekey_path: "{{ installation_path }}/guacamole/certs/guac_ssl.key"
+    provider: selfsigned
+    selfsigned_not_before: "-1d"  # Starts validity from yesterday
+    selfsigned_not_after: "+365d" # Expires in 1 year
+    selfsigned_create_subject_key_identifier: "create_if_not_provided"
+
+- name: Combine key and certificate into a single file
+  ansible.builtin.shell: >
+    cat {{ installation_path }}/guacamole/certs/guac_ssl.key 
+    {{ installation_path }}/guacamole/certs/guac_ssl.crt 
+    > {{ installation_path }}/guacamole/certs/guac_ssl.pem
+  args:
+    creates: "{{ installation_path }}/guacamole/certs/guac_ssl.pem"
