@@ -1,4 +1,4 @@
-🚀 **Ansible Role: Guacamole Deployment with HAProxy & SSL**
+🚀 **Ansible Role: Apache Guacamole Docker Deployment with HAProxy & SSL**
 
 📌 **Overview**
 
