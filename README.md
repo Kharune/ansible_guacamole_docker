@@ -111,16 +111,6 @@ Customize the role variables by modifying defaults/main.yml :
     ssl_cert_path: "/etc/ssl/certs/guacamole.pem"
     ssl_key_path: "/etc/ssl/private/guacamole.key"
 
-Override variables in your playbook if needed :
-
-    - name: Deploy Guacamole with Custom Settings
-      hosts: preprod
-      roles:
-        - role: guacamole_docker
-          vars:
-            fqdn: "remote.example.com"
-            mysql_password: "securepassword"
-
 🔒 **SSL & HAProxy Configuration**
 
 Self-Signed Certificate Generation
