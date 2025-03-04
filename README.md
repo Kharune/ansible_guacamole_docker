@@ -134,3 +134,7 @@ This role configures HAProxy to :
     Forward traffic to Guacamole
     
     Redirect HTTP to HTTPS
+
+Apache interface
+guacadmin/guacadmin
+![image](https://github.com/user-attachments/assets/28834d87-8877-49d6-b895-a1cdecd62662)
