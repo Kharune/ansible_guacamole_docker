@@ -1,0 +1,162 @@
+🚀 **Ansible Role: Guacamole Deployment with HAProxy & SSL**
+
+📌 **Overview**
+
+This Ansible role automates the deployment of Apache Guacamole with HAProxy as a reverse proxy and a self-signed SSL certificate for secure remote access.
+
+✅ **Features**
+
+✔️ Deploys Guacamole using Docker & Docker Compose
+
+✔️ Sets up MariaDB as the database backend
+
+✔️ Configures HAProxy for load balancing and SSL termination
+
+✔️ Generates a self-signed SSL certificate for HTTPS access
+
+✔️ Initializes the Guacamole database schema
+
+✔️ Ensures all services are running and configured properly
+
+📋 **Prerequisites**
+
+🛠 **Supported Operating Systems (Tested)**
+
+Debian 12+
+
+⚙️ **Required Dependencies**
+
+Ensure the control machine has:
+
+Ansible 2.10+
+
+Python 3.6+
+
+Ansible collection community.docker
+
+Ansible collection community.crypto
+
+Ensure the target machine has:
+
+Internet access (for package downloads)
+
+Docker and Docker Compose installed
+
+🔑 **Privileges**
+
+Run playbooks as a user with sudo privileges and SSH key-based authentication.
+
+In this role, the default user is control.
+
+🚀 **Quick Start Guide**
+
+1️⃣ **Install the Role**
+
+Clone this repository or download it:
+
+git clone https://github.com/yourusername/ansible-role-guacamole.git
+cd ansible-role-guacamole
+
+2️⃣ **Configure Inventory, Playbook, and Ansible Configuration**
+
+Before running the playbook, ensure the following files are properly configured based on your environment.
+
+Inventory Configuration (hosts.yml)
+
+lab:
+  vars:
+    ansible_python_interpreter: auto_silent
+  hosts:
+    192.168.253.130:22450  # Change this based on your environment
+preprod:
+  children:
+    lab:
+
+Playbook Configuration (PB_deploy_guacamole.yml)
+
+---
+- name: Deploy Guacamole with HAProxy & SSL
+  hosts: preprod  # Change this based on your target group
+  remote_user: control  # Change this based on your user
+  become: true
+
+  vars_files:
+    - vars/secrets.yml  # Load encrypted variables (e.g., database passwords)
+
+  roles:
+    - guacamole_docker
+
+Ansible Configuration (ansible.cfg)
+
+Ensure your Ansible configuration is set correctly:
+
+[defaults]
+inventory=/home/control/hosts.yml  # Change to your inventory file
+transport=paramiko  # Change if you don't use paramiko
+
+3️⃣ **Run the Playbook**
+
+Run the playbook:
+
+ansible-playbook PB_deploy_guacamole.yml
+
+⚙️ **Role Variables**
+
+Customize the role variables by modifying defaults/main.yml:
+
+# Database Configuration
+mysql_root_password: "your_password"
+mysql_database: "guacamole"
+mysql_user: "guacamole"
+mysql_password: "your_password"
+
+# SSL Configuration
+fqdn: "guacamole.example.com"
+ssl_cert_path: "/etc/ssl/certs/guacamole.pem"
+ssl_key_path: "/etc/ssl/private/guacamole.key"
+
+Override variables in your playbook if needed:
+
+- name: Deploy Guacamole with Custom Settings
+  hosts: preprod
+  roles:
+    - role: guacamole_docker
+      vars:
+        fqdn: "remote.example.com"
+        mysql_password: "securepassword"
+
+🔒 **SSL & HAProxy Configuration**
+
+Self-Signed Certificate Generation
+
+This role automatically generates a self-signed SSL certificate for HAProxy:
+
+Certificate Path: /etc/ssl/certs/guacamole.pem
+
+Key Path: /etc/ssl/private/guacamole.key
+
+To use a Let's Encrypt certificate instead:
+
+Replace the generated certificate with a valid Let's Encrypt cert.
+
+Update the HAProxy configuration to point to the new certificate paths.
+
+HAProxy Configuration (haproxy.cfg)
+
+This role configures HAProxy to:
+
+Terminate SSL at the proxy
+
+Forward traffic to Guacamole
+
+Redirect HTTP to HTTPS
+
+Example HAProxy configuration:
+
+frontend https-in
+    bind *:443 ssl crt /etc/ssl/certs/guacamole.pem
+    redirect scheme https if !{ ssl_fc }
+    default_backend guacamole_servers
+
+backend guacamole_servers
+    server guacamole localhost:8080 check
