@@ -4,4 +4,4 @@
   remote_user: control
   become: true
   roles:
-    - guacamole_docker
+    - guacamole_docker_with_https
