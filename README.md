@@ -28,9 +28,11 @@ Debian 12+
 
   Ensure the control machine has :
   
-    Ansible 2.10+
+    Ansible-core 2.15.13
   
-    Python 3.6+
+    Python 3.9.21
+
+    Paramiko 3.5.1
   
     Ansible collection community.docker
   
@@ -41,6 +43,8 @@ Debian 12+
     Internet access (for package downloads)
   
     Docker and Docker Compose installed
+
+    Python 3.11.2
 
 🔑 **Privileges**
 
